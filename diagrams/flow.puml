@@ -1,0 +1,25 @@
+@startuml
+
+participant "AWS CloudWatch" as cloudwatch
+participant "AWS Lambda" as lambda
+participant "Teacher's Website" as teach << website >>
+participant "AWS S3" as s3
+participant "AWS ses" as ses
+
+cloudwatch --> lambda ++: Invoke on schedule
+lambda --> teach ++: Fetch Latest Top-Level Text
+teach --> lambda --: Raw HTML Content
+lambda --> lambda: Parse Text
+lambda --> lambda: Get List of 'Distance Learning Pages'
+lambda --> lambda: Get Latest Page URL
+lambda --> teach ++: Fetch Content for latest page
+teach --> lambda --: Raw HTML Content
+lambda --> lambda: Get list of links
+lambda --> lambda: Fetch Raw Content for Links
+lambda --> s3 ++: Store in S3
+deactivate s3
+lambda --> ses ++: Notify new content
+deactivate ses
+destroy lambda
+
+@enduml
