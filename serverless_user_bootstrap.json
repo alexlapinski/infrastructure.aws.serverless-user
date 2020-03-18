@@ -1,0 +1,11 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+        "Type": "AWS::IAM::User",
+        "Properties": {},
+        "IAMUT7VZ": {
+            "Type": "AWS::IAM::User",
+            "Properties": {}
+        }
+    }
+}
