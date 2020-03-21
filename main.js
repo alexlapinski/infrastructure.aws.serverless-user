@@ -20,22 +20,37 @@ const printList = (list, level = 0) => list.forEach(item => printListItem(item, 
 
 const handler = (event, context, callback) => {
 
-  const url = 'https://www.cbsd.org/Page/47195';
+  const url = `${config.getBaseUrl()}/Page/47195`;
 
-  return fetcher.getIndexPage(url)
-    .then(parser.extractNavigation)
+  return fetcher.getPage(url)
+    .then(parser.extractNavigation(config.getBaseUrl()))
     .then(navigation => {
-
       printList(navigation);
-      
+      return navigation;
+    })
+    .then(navigation => 
+      Promise.all(
+        navigation[1]
+          .children
+          .filter(child => child && child.link && child.link.url)
+          .map(child => fetcher.getPage(child.link.url))
+      )
+    )
+    .then( pages => {
+      console.log(`# Pages: ${pages.length}`);
+      return pages.map(parser.extractPageText)
+    })
+    .then(pageContents => {
+      pageContents.forEach(page => console.log(page));
+    })
+    .then(() => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(navigation),
+        body: JSON.stringify(null),
       };
     
       callback(null, response);
-
-    })
+    });
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });

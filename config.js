@@ -1,6 +1,5 @@
 const convict = require('convict');
 
-
 module.exports = {
-    getBaseUrl: () => {},
+    getBaseUrl: () => 'https://www.cbsd.org',
 };

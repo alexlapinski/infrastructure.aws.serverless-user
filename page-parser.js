@@ -1,12 +1,13 @@
+const R = require('ramda');
 const cheerio = require('cheerio');
 
-const extractNavigation = (pageContent) => {
+const extractNavigation = (baseUrl, pageContent) => {
     const $ = cheerio.load(pageContent);
 
     const parseAnchor = (anchor) =>
         ({
             text: $(anchor).text().trim(),
-            url: $(anchor).attr('href'),
+            url: `${baseUrl}${$(anchor).attr('href')}`,
         });
 
     const parseListItem = (item) => {
@@ -27,13 +28,16 @@ const extractNavigation = (pageContent) => {
     const parseList = (list) =>
         $(list).toArray().map(parseListItem);
 
-    const rawNav = $('ul.page-navigation > li');
-
-    const nav = parseList(rawNav);
-
-    return nav;
+    return  parseList($('ul.page-navigation > li'));
 };
 
+const extractPageText = (pageContent) => {
+    const $ = cheerio.load(pageContent);
+
+    return $('.ui-article').text().trim();
+}
+
 module.exports = {
-    extractNavigation,
+    extractNavigation: R.curry(extractNavigation),
+    extractPageText,
 }
