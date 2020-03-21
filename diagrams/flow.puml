@@ -1,4 +1,4 @@
-@startuml
+@startuml Distance Learning Parser
 
 participant "AWS CloudWatch" as cloudwatch
 participant "AWS Lambda" as lambda
