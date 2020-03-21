@@ -1,6 +1,22 @@
+const R = require('ramda');
 const config = require('./config');
 const fetcher = require('./page-fetcher');
 const parser = require('./page-parser');
+
+const levelToSpace = (level) => R.repeat(' ', 2 * level).join('');
+
+const printListItem = (item, level = 0) => {
+  
+  if (item && item.link) {
+    console.log(`${levelToSpace(level)}[${item.link.text}](${item.link.url})`);
+  }
+
+  if (item.children) {
+    printList(item.children, level + 1);
+  }
+}
+
+const printList = (list, level = 0) => list.forEach(item => printListItem(item, level));
 
 const handler = (event, context, callback) => {
 
@@ -8,16 +24,13 @@ const handler = (event, context, callback) => {
 
   return fetcher.getIndexPage(url)
     .then(parser.extractNavigation)
-    .then(indexPage => {
+    .then(navigation => {
 
-      console.log(JSON.stringify(indexPage, null, 2));
-
+      printList(navigation);
+      
       const response = {
         statusCode: 200,
-        body: JSON.stringify({
-          message: 'Go Serverless v1.0! Your function executed successfully!',
-          input: event,
-        }),
+        body: JSON.stringify(navigation),
       };
     
       callback(null, response);

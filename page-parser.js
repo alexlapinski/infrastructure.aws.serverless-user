@@ -5,7 +5,7 @@ const extractNavigation = (pageContent) => {
 
     const parseAnchor = (anchor) =>
         ({
-            text: $(anchor).text(),
+            text: $(anchor).text().trim(),
             url: $(anchor).attr('href'),
         });
 
