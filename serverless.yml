@@ -2,17 +2,44 @@ service: aws-nodejs # NOTE: update this with your service name
 provider:
   name: aws
   runtime: nodejs12.x
+  tracing:
+    apiGateway: true
+    lambda: true # Optional, can be true (true equals 'Active'), 'Active' or 'PassThrough'
+  logs:
+    frameworkLambda: true
 
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+package:
+  include:
+    - ./src/**
 
 functions:
-  hello:
+  getHomework:
     handler: main.handler
+    tracing: Active
+    environment:
+      STORAGE_BUCKET_NAME:
+        'Fn::ImportValue': 'S3BucketName'
     events:
-      - schedule: rate(1 day)
+      - httpApi:
+        method: GET
+        path: /get-homework
+      # - schedule: rate(1 day) # TODO: Setup Time-based trigger (later)
+
+resources:
+  HomeworkStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: Private
+      BucketEncryption:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+        
+
+outputs:
+  BucketName:
+    Value: 
+      'Fn:GetAtt': [HomeworkStorage, Arn]
+    Description: S3 bucket holding the files downloaded from the daily fetcher.
+    Export:
+      Name: S3BucketName
+    

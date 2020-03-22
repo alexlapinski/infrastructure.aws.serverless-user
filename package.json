@@ -1,13 +1,13 @@
 {
-  "name": "infrastructure.aws.serverless-user",
+  "name": "serverless.distance-learning-parser",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "./src/main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node ./src/main.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Alex Lapinski <contact@alexlapinski.name",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
