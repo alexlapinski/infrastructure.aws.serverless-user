@@ -17,14 +17,15 @@ functions:
     handler: main.handler
     tracing: Active
     environment:
-      # TODO: Figure out how to reference the bucket name from
-      #       Cloudformation Output/Export
       STORAGE_BUCKET_NAME:
         'Ref': HomeworkStorage
     events:
-      - httpApi:
-        method: GET
-        path: /get-homework
+      - http:
+        path: homework
+        method: get
+      #
+      # TODO: Implement 'schedule' for event instead of http
+      #
       # - schedule: rate(1 day) # TODO: Setup Time-based trigger (later)
 
 resources:
