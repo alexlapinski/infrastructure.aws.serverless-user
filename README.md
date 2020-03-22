@@ -17,7 +17,7 @@ Fetch the current list of homework / distance learning and save it to s3.
     ```sh
     npm install
     ```
-3. Run Tests ```[optional]```
+3. Run Tests *[optional]*
     ```sh
     npm test
     ```
