@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./src/main.js",
     "test": "jest ./src/",
-    "build-docs": "echo 'TODO'"
+    "build-docs": "echo 'TODO'",
+    "deploy": "serverless deploy",
+    "destroy": "serverless remove"
   },
   "author": "Alex Lapinski <contact@alexlapinski.name",
   "license": "MIT",
@@ -18,6 +20,7 @@
     "ramda": "^0.27.0"
   },
   "devDependencies": {
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "serverless": "^1.67.0"
   }
 }
