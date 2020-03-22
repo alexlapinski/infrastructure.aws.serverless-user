@@ -8,7 +8,8 @@
     "test": "jest ./src/",
     "build-docs": "echo 'TODO'",
     "deploy": "serverless deploy",
-    "destroy": "serverless remove"
+    "destroy": "serverless remove",
+    "package": "serverless package -p ./"
   },
   "author": "Alex Lapinski <contact@alexlapinski.name",
   "license": "MIT",
