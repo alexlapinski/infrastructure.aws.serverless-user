@@ -28,25 +28,36 @@ const handler = (event, context, callback) => {
       printList(navigation);
       return navigation;
     })
-    .then(navigation => 
-      Promise.all(
-        navigation[1]
-          .children
-          .filter(child => child && child.link && child.link.url)
-          .map(child => fetcher.getPage(child.link.url))
-      )
-    )
-    .then( pages => {
-      console.log(`# Pages: ${pages.length}`);
-      return pages.map(parser.extractPageText)
+    .then(navigation => {
+
+      // TODO: Get latest page url
+
+      console.log(JSON.stringify(navigation, null, 2));
+
+      const getNavItemByText = text => R.find(R.pathEq(['link', 'text'], text))
+      const distanceLearningNavItem = getNavItemByText('Distance Learning')(navigation);
+      console.log(JSON.stringify(distanceLearningNavItem, null, 2))
+
+      // Get Latest Day (Day X)
+      const mostRecentText = R.reduce(
+        (localMax, navItem) => R.max(localMax, R.path(['link','text'], navItem)),
+        '',
+        R.prop('children', distanceLearningNavItem)
+      );
+
+      const mostRecent = R.find(
+        R.pathEq(['link', 'text'], mostRecentText),
+        R.prop('children', distanceLearningNavItem)
+      );
+
+      console.log(JSON.stringify(mostRecent, null, 2));
+
+
     })
-    .then(pageContents => {
-      pageContents.forEach(page => console.log(page));
-    })
-    .then(() => {
+   .then((items) => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(null),
+        body: JSON.stringify(items),
       };
     
       callback(null, response);
@@ -59,7 +70,7 @@ const handler = (event, context, callback) => {
 
 
 
-module.exports.handler
+module.exports.handler = handler;
 
 if (require.main === module) {
   handler(null, null, (_, res) => {
