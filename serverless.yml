@@ -2,6 +2,8 @@ service: distance-learning
 provider:
   name: aws
   runtime: nodejs12.x
+  region: us-east-1
+  stage: dev
   tracing:
     apiGateway: true
     lambda: true # Optional, can be true (true equals 'Active'), 'Active' or 'PassThrough'
@@ -11,18 +13,23 @@ provider:
 package:
   include:
     - ./src/**
+  exclude:
+    - .github/**
+    - ./src/**/*.spec.js
 
 functions:
   getHomework:
-    handler: main.handler
+    handler: src/main.handler
+    memorySize: 128
+    description: Task to get the contents of an HTML Page and return links to files.
     tracing: Active
     environment:
       STORAGE_BUCKET_NAME:
         'Ref': HomeworkStorage
     events:
       - http:
-        path: homework
-        method: get
+          path: homework
+          method: get
       #
       # TODO: Implement 'schedule' for event instead of http
       #
