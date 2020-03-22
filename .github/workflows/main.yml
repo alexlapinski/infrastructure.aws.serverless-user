@@ -24,3 +24,8 @@ jobs:
         run: npm test
         env:
           CI: true
+
+      - name: Serverless Package
+        uses: serverless/github-action@master
+        with:
+          args: package -p ./
