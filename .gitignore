@@ -4,3 +4,6 @@ jspm_packages
 
 # Serverless directories
 .serverless
+cloudformation-*.json
+serverless-state*.json
+*.zip
