@@ -23,16 +23,13 @@ Fetch the current list of homework / distance learning and save it to s3.
     ```
 
 ## Deployment
-1. Ensure ```serverless``` is installed on your path.
-    ```sh
-    npm install --global serverless
-    ```
-    or
-    ```sh
-    npm update --global serverless
-    ```
-2. [Optional] Setup AWS Access
+1. [Optional] Setup AWS Access
     * [Serverless.com](https://serverless.com/framework/docs/providers/aws/guide/credentials/)
-3. Run Serverless deploy
+2. Deploy via Serverless
     ```sh
+    npm run deploy
+    ```
+3. Tear Down infrastructure via Serverless
+    ```sh
+    npm run destroy
     ```
