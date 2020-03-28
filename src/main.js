@@ -34,10 +34,13 @@ const handler = (event, context, callback) => {
       console.log(JSON.stringify(latestContentLinks, null, 2));
 
       // TODO: Download files attached to links 
-      
+
       return latestContentLinks;
     })
    .then((items) => {
+
+     // TODO: SEnd Email via SNS
+
       const response = {
         statusCode: 200,
         body: JSON.stringify({
@@ -47,6 +50,9 @@ const handler = (event, context, callback) => {
       };
     
       callback(null, response);
+    })
+    .catch(err => {
+      // TODO: SEnd Email via SNS
     });
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
