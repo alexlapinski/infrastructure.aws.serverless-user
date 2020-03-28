@@ -28,36 +28,22 @@ const handler = (event, context, callback) => {
       printList(navigation);
       return navigation;
     })
-    .then(navigation => {
+    .then(fetcher.getLatestPageContent)
+    .then(parser.extractLinks)
+    .then((latestContentLinks) => {
+      console.log(JSON.stringify(latestContentLinks, null, 2));
 
-      // TODO: Get latest page url
-
-      console.log(JSON.stringify(navigation, null, 2));
-
-      const getNavItemByText = text => R.find(R.pathEq(['link', 'text'], text))
-      const distanceLearningNavItem = getNavItemByText('Distance Learning')(navigation);
-      console.log(JSON.stringify(distanceLearningNavItem, null, 2))
-
-      // Get Latest Day (Day X)
-      const mostRecentText = R.reduce(
-        (localMax, navItem) => R.max(localMax, R.path(['link','text'], navItem)),
-        '',
-        R.prop('children', distanceLearningNavItem)
-      );
-
-      const mostRecent = R.find(
-        R.pathEq(['link', 'text'], mostRecentText),
-        R.prop('children', distanceLearningNavItem)
-      );
-
-      console.log(JSON.stringify(mostRecent, null, 2));
-
-
+      // TODO: Download files attached to links 
+      
+      return latestContentLinks;
     })
    .then((items) => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(items),
+        body: JSON.stringify({
+          links: items,
+          // # TODO ADD PAGE TEXT: text: 
+        })
       };
     
       callback(null, response);

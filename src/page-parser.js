@@ -35,9 +35,23 @@ const extractPageText = (pageContent) => {
     const $ = cheerio.load(pageContent);
 
     return $('.ui-article').text().trim();
+};
+
+const extractLinks = (pageContent) => {
+    const $ = cheerio.load(pageContent);
+
+    return $('[role=main] a[href]')
+        .toArray()
+        .map((element) => {
+            return {
+                text: $(element).text(),
+                url: $(element).attr('href'),
+            };
+        });
 }
 
 module.exports = {
     extractNavigation: R.curry(extractNavigation),
     extractPageText,
+    extractLinks,
 }
