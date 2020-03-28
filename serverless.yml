@@ -28,6 +28,8 @@ functions:
     environment:
       STORAGE_BUCKET_NAME:
         'Ref': HomeworkStorage
+      EMAIL_TOPIC_ARN:
+        'Ref': EmailNotify
     events:
       - schedule:
           name: every-weekday-at-10am
@@ -36,12 +38,7 @@ functions:
       - http:
           path: homework
           method: get
-    destinations:
-      onSuccess:
-        'Ref': EmailNotify
-      onFailure: 
-        'Ref': EmailNotify
-
+    
       #
       # TODO: Implement 'schedule' for event instead of http
       #
@@ -67,3 +64,6 @@ resources:
       Export:
         Name: S3BucketName
     
+
+plugins:
+  - serverless-plugin-tracing
