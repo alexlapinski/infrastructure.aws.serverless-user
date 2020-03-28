@@ -30,9 +30,9 @@ functions:
         'Ref': HomeworkStorage
     events:
       - schedule:
-          cron: 0 0 0 10 * ? *
-          name: scheduled-fetch-n-parse
+          name: every-weekday-at-10am
           description: Every weekday (except friday) at 10am
+          rate: cron(0 10 * * * 1,2,3,4 *)
       - http:
           path: homework
           method: get
