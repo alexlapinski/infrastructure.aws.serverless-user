@@ -32,7 +32,7 @@ functions:
       - schedule:
           name: every-weekday-at-10am
           description: Every weekday (except friday) at 10am
-          rate: cron(0 10 * * * 1,2,3,4 *)
+          rate: cron(0 10 ? * 1,2,3,4 *)
       - http:
           path: homework
           method: get
