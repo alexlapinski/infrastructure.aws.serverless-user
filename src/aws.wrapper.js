@@ -15,4 +15,5 @@ const getSESInstance = () => {
 
 module.exports = {
     getAWSInstance,
+    getSESInstance,
 };
