@@ -4,6 +4,8 @@ provider:
   runtime: nodejs12.x
   region: us-east-1
   stage: dev
+  iamManagedPolicies:
+    - 'AWSLambdaBasicExecutionRole'
   tracing:
     apiGateway: true
     lambda: true # Optional, can be true (true equals 'Active'), 'Active' or 'PassThrough'
