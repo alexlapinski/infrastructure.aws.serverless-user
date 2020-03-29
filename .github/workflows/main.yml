@@ -64,24 +64,3 @@ jobs:
         uses: serverless/github-action@master
         with:
           args: package -p ./
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Codebase
-        uses: actions/checkout@v2
-      
-      - name: Use Node.js 12.X
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build Typescript (TODO Later)
-        run: npm run build --if-present
-
-      - name: Serverless Package
-        uses: serverless/github-action@master
-        with:
-          args: deploy
