@@ -5,7 +5,7 @@ const send = (to, subject, bodyHtml) => {
 
     // TODO: read config for source & reply email address
     const replyTo = 'no-reply@alexlapinski.name';
-    const source = 'distance-learning@alexlapinski.name';
+    const source = 'ses@alexlapinski.name';
 
     return ses.sendEmail({
         Destination: { ToAddresses: [to], },

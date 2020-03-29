@@ -23,37 +23,28 @@ const handler = (event, context, callback) => {
 
   const url = `${config.getBaseUrl()}/Page/47195`;
 
+  // TODO: Add 'TAP'  & debug logs between steps
   return fetcher.getPage(url)
     .then(parser.extractNavigation(config.getBaseUrl()))
-    .then(navigation => {
-      printList(navigation);
-      return navigation;
-    })
     .then(fetcher.getLatestPageContent)
     .then(parser.extractLinks)
     .then((latestContentLinks) => {
-      console.log(JSON.stringify(latestContentLinks, null, 2));
 
       // TODO: Download files attached to links 
 
       return latestContentLinks;
     })
-   .then((items) => {
-
-     // TODO: SEnd Email via SNS
-      if(callback) {
-        const response = {
-          statusCode: 200,
-          body: JSON.stringify({
-            links: items,
-            // # TODO ADD PAGE TEXT: text: 
-          })
-        };
-      
-        callback(null, response);
-      }
-      
-      return email.send('contact@alexlapinski.name', 'Success', JSON.stringify(items, null, 2));
+   .then((items) => email.send('contact@alexlapinski.name', 'Success', JSON.stringify(items, null, 2)))
+    .then(items => {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          links: items,
+          // # TODO ADD PAGE TEXT: text: 
+        })
+      };
+    
+      callback(null, response);
     })
     .catch(err => {
       // TODO: SEnd Email via SNS
