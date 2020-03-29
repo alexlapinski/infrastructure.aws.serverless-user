@@ -4,11 +4,17 @@ provider:
   runtime: nodejs12.x
   region: us-east-1
   stage: dev
-  iamManagedPolicies:
-    - 'AWSLambdaBasicExecutionRole'
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: '*'
+    
   tracing:
     apiGateway: true
-    lambda: true # Optional, can be true (true equals 'Active'), 'Active' or 'PassThrough'
+    lambda: 'Active'
   logs:
     frameworkLambda: true
 
@@ -24,7 +30,7 @@ package:
 functions:
   getHomework:
     handler: src/main.handler
-    memorySize: 128
+    memorySize: 1024
     description: Task to get the contents of an HTML Page and return links to files.
     tracing: Active
     environment:
