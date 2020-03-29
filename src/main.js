@@ -2,6 +2,7 @@ const R = require('ramda');
 const config = require('./config');
 const fetcher = require('./page-fetcher');
 const parser = require('./page-parser');
+const email = require('./email.service');
 
 const levelToSpace = (level) => R.repeat(' ', 2 * level).join('');
 
@@ -40,19 +41,24 @@ const handler = (event, context, callback) => {
    .then((items) => {
 
      // TODO: SEnd Email via SNS
-
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-          links: items,
-          // # TODO ADD PAGE TEXT: text: 
-        })
-      };
-    
-      callback(null, response);
+      if(callback) {
+        const response = {
+          statusCode: 200,
+          body: JSON.stringify({
+            links: items,
+            // # TODO ADD PAGE TEXT: text: 
+          })
+        };
+      
+        callback(null, response);
+      }
+      
+      return email.send('contact@alexlapinski.name', 'Success', JSON.stringify(items, null, 2));
     })
     .catch(err => {
       // TODO: SEnd Email via SNS
+
+      return email.send('contact@alexlapinski.name', 'Error', err.message);
     });
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
