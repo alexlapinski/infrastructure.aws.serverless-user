@@ -21,7 +21,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: project_source
-          path: serverless.distance-learning
+          path: .
       
       - name: Run Tests
         run: npm test
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: project_compiled
-          path: serverless.distance-learning
+          path: .
 
 
   package:
