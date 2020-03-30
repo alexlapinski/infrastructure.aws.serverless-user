@@ -4,6 +4,7 @@ const fetcher = require('./page-fetcher');
 const parser = require('./page-parser');
 const email = require('./email.service');
 const emailFormatter = require('./email.formatter');
+const moment = require('moment');
 
 const levelToSpace = (level) => R.repeat(' ', 2 * level).join('');
 
@@ -43,7 +44,7 @@ const handler = (event, context) => {
   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
-const getEmailSubject = (date) => `Ethan's Distance Learning for ${date.toString()}`;
+const getEmailSubject = (date) => `Ethan's Distance Learning for ${moment(date).format('dddd MMMM Do')}`;
 
 
 

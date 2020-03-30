@@ -11,8 +11,17 @@ provider:
         - logs:CreateLogStream
         - logs:PutLogEvents
       Resource: '*'
-  tracing:
-    lambda: true
+    - Effect: Allow
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: '*'
+    - Effect: Allow
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+      Resource: '*'
+  tracing: true
   logs:
     frameworkLambda: true
 
@@ -37,8 +46,8 @@ functions:
     events:
       - schedule:
           name: every-weekday-at-10am
-          description: Every weekday (except friday) at 10am
-          rate: cron(0 10 ? * 1,2,3,4 *)
+          description: Every weekday (except friday) at 10am(EST)
+          rate: cron(0 14 ? * 1,2,3,4 *)
 
 resources:
   Resources:
