@@ -43,7 +43,7 @@ const handler = (event, context) => {
   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
-const getEmailSubject = (date) => `Ethan's Distance Learning for ${date.replace(/T/, ' ').replace(/\..+/, '')}`;
+const getEmailSubject = (date) => `Ethan's Distance Learning for ${date.toString()}`;
 
 
 
