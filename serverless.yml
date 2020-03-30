@@ -34,8 +34,6 @@ functions:
     environment:
       STORAGE_BUCKET_NAME:
         'Ref': HomeworkStorage
-      EMAIL_TOPIC_ARN:
-        'Ref': EmailNotify
     events:
       - schedule:
           name: every-weekday-at-10am

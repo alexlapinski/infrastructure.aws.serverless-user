@@ -3,6 +3,7 @@ const config = require('./config');
 const fetcher = require('./page-fetcher');
 const parser = require('./page-parser');
 const email = require('./email.service');
+const emailFormatter = require('./email.formatter');
 
 const levelToSpace = (level) => R.repeat(' ', 2 * level).join('');
 
@@ -19,7 +20,7 @@ const printListItem = (item, level = 0) => {
 
 const printList = (list, level = 0) => list.forEach(item => printListItem(item, level));
 
-const handler = (event, context, callback) => {
+const handler = (event, context) => {
 
   const url = `${config.getBaseUrl()}/Page/47195`;
 
@@ -34,23 +35,9 @@ const handler = (event, context, callback) => {
 
       return latestContentLinks;
     })
-   .then((items) => email.send('contact@alexlapinski.name', 'Success', JSON.stringify(items, null, 2)))
-    .then(items => {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-          links: items,
-          // # TODO ADD PAGE TEXT: text: 
-        })
-      };
-    
-      callback(null, response);
-    })
-    .catch(err => {
-      // TODO: SEnd Email via SNS
-
-      return email.send('contact@alexlapinski.name', 'Error', err.message);
-    });
+    .then(emailFormatter.formatEmail)
+    .then(emailBody => email.send('ses@alexlapinski.name', `Ethan's Distance Learning for ${Date.now().toString()}`, emailBody))
+    .catch(err => email.send('ses@alexlapinski.name', 'Error', err.message));
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
@@ -62,7 +49,6 @@ const handler = (event, context, callback) => {
 module.exports.handler = handler;
 
 if (require.main === module) {
-  handler(null, null, (_, res) => {
-    console.log(JSON.stringify(res, null, 2));
-  }).then(() => console.log('Done'));
+  handler(null, null)
+    .then(() => console.log('Done'));
 }
