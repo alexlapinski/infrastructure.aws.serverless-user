@@ -36,13 +36,14 @@ const handler = (event, context) => {
       return latestContentLinks;
     })
     .then(emailFormatter.formatEmail)
-    .then(emailBody => email.send('ses@alexlapinski.name', `Ethan's Distance Learning for ${Date.now().toString()}`, emailBody))
+    .then(emailBody => email.send('ses@alexlapinski.name', getEmailSubject(Date.now()), emailBody))
     .catch(err => email.send('ses@alexlapinski.name', 'Error', err.message));
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
+const getEmailSubject = (date) => `Ethan's Distance Learning for ${date.replace(/T/, ' ').replace(/\..+/, '')}`;
 
 
 
