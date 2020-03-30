@@ -11,10 +11,8 @@ provider:
         - logs:CreateLogStream
         - logs:PutLogEvents
       Resource: '*'
-    
   tracing:
-    apiGateway: true
-    lambda: 'Active'
+    lambda: true
   logs:
     frameworkLambda: true
 
@@ -43,14 +41,6 @@ functions:
           name: every-weekday-at-10am
           description: Every weekday (except friday) at 10am
           rate: cron(0 10 ? * 1,2,3,4 *)
-      - http:
-          path: homework
-          method: get
-    
-      #
-      # TODO: Implement 'schedule' for event instead of http
-      #
-      # - schedule: rate(1 day) # TODO: Setup Time-based trigger (later)
 
 resources:
   Resources:
@@ -58,12 +48,6 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         AccessControl: Private
-    EmailNotify:
-      Type: AWS::SNS::Topic
-      Properties:
-        Subscription:
-          - Endpoint: "ses@alexlapinski.name"
-            Protocol: email
   Outputs:
     S3BucketName:
       Value: 
