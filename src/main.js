@@ -1,3 +1,5 @@
+const awsXRay = require('aws-xray-sdk');
+const awsSdk = awsXRay.captureAWS(require('aws-sdk'));
 const R = require('ramda');
 const config = require('./config');
 const fetcher = require('./page-fetcher');
