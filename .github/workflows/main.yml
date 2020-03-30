@@ -17,12 +17,13 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Upload Project Source
-        uses: actions/upload-artifact@v1
+      - uses: actions/cache@v1
         with:
-          name: project_source
-          path: .
-      
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Run Tests
         run: npm test
         env:
