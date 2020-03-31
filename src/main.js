@@ -25,11 +25,25 @@ const printList = (list, level = 0) => list.forEach(item => printListItem(item, 
 
 const handler = (event, context) => {
 
-  const url = `${config.getBaseUrl()}/Page/47195`;
+  const ethansLearning = getAndSend(
+    'Ethan',
+    `${config.getBaseUrl()}/Page/47195`,
+    parser.getWallaceLatestPageUrl,
+  );
+  
+  const evasLearning = getAndSend(
+      'Eva',
+      `${config.getBaseUrl()}/Page/53778`,
+      parser.getYurickLatestPageUrl,
+  );
+  
+  return Promise.all([ethansLearning, evasLearning]);
+};
 
-  // TODO: Add 'TAP'  & debug logs between steps
-  return fetcher.getPage(url)
+const getAndSend = (name, url, latestPageSelector) =>
+  fetcher.getPage(url)
     .then(parser.extractNavigation(config.getBaseUrl()))
+    .then(latestPageSelector)
     .then(fetcher.getLatestPageContent)
     .then(parser.extractLinks)
     .then((latestContentLinks) => {
@@ -39,14 +53,20 @@ const handler = (event, context) => {
       return latestContentLinks;
     })
     .then(emailFormatter.formatEmail)
-    .then(emailBody => email.send('ses@alexlapinski.name', getEmailSubject(Date.now()), emailBody))
-    .catch(err => email.send('ses@alexlapinski.name', 'Error', err.message));
+    .then(emailBody => config.isSendEmailEnabled()
+      ? email.send('ses@alexlapinski.name', getEmailSubject(name, Date.now()), emailBody)
+      : Promise.resolve()
+    )
+    .catch(err => {
+      console.log(`Exception: ${err.message}`);
+      return config.isSendEmailEnabled()
+        ? email.send('ses@alexlapinski.name', 'Error', err.message)
+        : Promise.resolve();
+    });
+    // Use this code if you don't use the http event with the LAMBDA-PROXY integration
+    // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
-};
-
-const getEmailSubject = (date) => `Ethan's Distance Learning for ${moment(date).format('dddd MMMM Do')}`;
+const getEmailSubject = (name, date) => `${name}'s Distance Learning for ${moment(date).format('dddd MMMM Do')}`;
 
 
 

@@ -48,10 +48,77 @@ const extractLinks = (pageContent) => {
                 url: $(element).attr('href'),
             };
         });
-}
+};
+
+/**
+ * Get the URL of the latest page for assignments for Mrs. Yurick
+ */
+const getYurickLatestPageUrl = (navigation) => {
+    const getNavItemByText = text => R.find(R.pathEq(['link', 'text'], text))
+    const distanceLearningNavItem = getNavItemByText('Distance Learning')(navigation);
+
+    // Get Latest Week
+    const mostRecentGroupNavItem = R.reduce(
+        (localMax, navItem) => R.maxBy(R.path(['link', 'text']), localMax, navItem),
+        {link:{ text: ''}},
+        R.filter(
+            R.pathSatisfies(R.startsWith('Distance Learning'), ['link', 'text']),
+            R.prop('children', distanceLearningNavItem),
+        ),
+    );
+    
+    const mostRecentText = R.reduce(
+        (localMax, navItem) => R.max(localMax, R.path(['link','text'], navItem)),
+        '',
+        R.filter(
+            // TODO: Fix this so that only pages with the format 3-2-2020 show up 
+            R.pathSatisfies(R.match(/\d+-\d+-\d+/), ['link', 'text']),
+            R.prop('children', mostRecentGroupNavItem),
+        ),
+      );
+
+
+    const mostRecent = R.find(
+      R.pathEq(['link', 'text'], mostRecentText),
+      R.prop('children', mostRecentGroupNavItem)
+    );
+
+    console.log('[Yurick]# Found most recent distance learning page:');
+    console.log(JSON.stringify(mostRecent, null, 2));
+    // TODO: Update this to account for eva's nested level
+
+    return mostRecent.link.url;
+};
+
+/**
+ * Get the URL of the latest page for assignments for Mrs. Wallace
+ */
+const getWallaceLatestPageUrl = (navigation) => {
+    const getNavItemByText = text => R.find(R.pathEq(['link', 'text'], text))
+    const distanceLearningNavItem = getNavItemByText('Distance Learning')(navigation);
+
+    // Get Latest Day (Day X)
+    const mostRecentText = R.reduce(
+      (localMax, navItem) => R.max(localMax, R.path(['link','text'], navItem)),
+      '',
+      R.prop('children', distanceLearningNavItem)
+    );
+
+    const mostRecent = R.find(
+      R.pathEq(['link', 'text'], mostRecentText),
+      R.prop('children', distanceLearningNavItem)
+    );
+
+    console.log('[Wallace]# Found most recent distance learning page:');
+    console.log(JSON.stringify(mostRecent, null, 2));
+
+    return mostRecent.link.url;
+};
 
 module.exports = {
     extractNavigation: R.curry(extractNavigation),
+    getYurickLatestPageUrl,
+    getWallaceLatestPageUrl,
     extractPageText,
     extractLinks,
 }
