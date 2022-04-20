@@ -18,7 +18,7 @@
     "aws-xray-sdk": "^2.5.0",
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
-    "convict": "^5.2.0",
+    "convict": "^6.2.2",
     "dotenv": "^8.2.0",
     "handlebars": "^4.7.3",
     "moment": "^2.24.0",
